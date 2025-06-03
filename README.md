@@ -46,3 +46,18 @@ hotspots.bypass.join.cooldown
 hotspots.bypass.end.cooldown
 hotspots.bypass.notifs.cooldown
 hotspots.bypass.confirm.cooldown
+
+## Features
+
+Short overview of its features:
+- Folia compatible: This plugin is fully folia compatible!
+- Almost entirely async: Except for a few necessary tasks, hotspot logic is done entirely async.
+- Safe teleports and warmups: Teleports are done through warmups with configurable time and the plugin tries to teleport the player to a safe, random location within the configured radius.
+- World-bounds: Per-world configurable bounds that hotspots can be created in. Includes x,z and y ranges.
+- Playtime: Restrict usage of /hotspot create for players that have been player for less than the configured playtime.
+- Particle effect: Configure a spheric particle effect that visually highlights a hotspots teleport range (and also looks cool)
+- Death effect: Players that die inside a hotspot will cause firework effects to spawn and linger on the death position
+- Max active Hotspots: Configure how many hotspots are allowed to be active at the same time
+- Automatic Timeout system: When a player leaves, they have a configurable amount of time until their hotspot gets paused and saved
+- Queue: Automatic queuing system which sorts hotspots by who had to wait the longest time first
+- And much more!
