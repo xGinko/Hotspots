@@ -28,24 +28,24 @@ Players have access to the following commands:
 Permissions are pretty self-explanatory imo.
 
 Default player permissions (These are TRUE by default)
-hotspots.cmd.end
-hotspots.cmd.join
-hotspots.cmd.notifs
+- hotspots.cmd.end
+- hotspots.cmd.join
+- hotspots.cmd.notifs
 
 Non-default player permissions (These are only assigned to operators by default)
-hotspots.cmd.create
-hotspots.cmd.end.other
-hotspots.cmd.reload
-hotspots.cmd.version
+- hotspots.cmd.create
+- hotspots.cmd.end.other
+- hotspots.cmd.reload
+- hotspots.cmd.version
 
 Bypass permissions (Operators will have them by default)
-hotspots.bypass.world-bounds
-hotspots.bypass.playtime
-hotspots.bypass.create.cooldown
-hotspots.bypass.join.cooldown
-hotspots.bypass.end.cooldown
-hotspots.bypass.notifs.cooldown
-hotspots.bypass.confirm.cooldown
+- hotspots.bypass.world-bounds
+- hotspots.bypass.playtime
+- hotspots.bypass.create.cooldown
+- hotspots.bypass.join.cooldown
+- hotspots.bypass.end.cooldown
+- hotspots.bypass.notifs.cooldown
+- hotspots.bypass.confirm.cooldown
 
 ## Features
 
