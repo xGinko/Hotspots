@@ -1,0 +1,69 @@
+########################################################################################################################
+#                                                                                                                      #
+#                                                       ʜᴏᴛsᴘᴏᴛs                                                       #
+#                                            Translation for locale: fr_fr                                             #
+#                                                                                                                      #
+#                    Please use MiniMessage format: https://docs.advntr.dev/minimessage/format.html                    #
+#                                                                                                                      #
+########################################################################################################################
+translator: "chatgpt"
+hotspot:
+  started: "<green>Le hotspot '%hotspot_name%' a commencé. Téléportez-vous avec /hotspot join %hotspot_name%."
+  queued: "<gray>Le hotspot '%hotspot_name%' a été mis en file d'attente."
+  timeout: "<yellow>Le hotspot '%hotspot_name%' a expiré car %hotspot_owner% a quitté le jeu pendant plus de %time%."
+  ended:
+    cancelled: "<gray>Le hotspot '%hotspot_name%' a pris fin prématurément."
+    expired: "<gray>Le hotspot '%hotspot_name%' est terminé."
+    death: "<#C000C0>Le hotspot '%hotspot_name%' a pris fin car %hotspot_owner% est mort."
+command:
+  no-permission: "<red>Vous n'avez pas la permission d'utiliser cette commande."
+  cooldown: "<gray>Vous êtes en période de refroidissement. Essayez à nouveau en %time%."
+  plugin-busy: "<yellow>Hotspots occupés. Réessayez dans quelques secondes."
+  not-hosting-hotspot: "<#C000C0>Vous n'avez pas de hotspot en cours d'exécution."
+  hotspot:
+    overview:
+      - ""
+      - "                          <#C000C0><bold>ʜᴏᴛsᴘᴏᴛs"
+      - ""
+      - " <#C000C0>/hotspot join <name> <dark_gray>- <gray>Vous téléporte à un hotspot."
+      - " <#C000C0>/hotspot create (color) (name) <dark_gray>- <gray>Crée un hotspot."
+      - " <#C000C0>/hotspot end <dark_gray>- <gray>Termine votre hotspot."
+      - " <#C000C0>/hotspot notifs off/on <dark_gray>- <gray>Active/désactive les messages de hotspot."
+      - ""
+    create:
+      success: "<green>Hotspot %hotspot_name% créé."
+      confirm:
+        - ""
+        - "  <yellow>Votre Hotspot sera créé avec le titre suivant :"
+        - "  %hotspot_title%"
+        - "  <gray>Confirmez avec <click:suggest_command:/hotspot confirm>/hotspot confirm."
+        - ""
+      failed:
+        name-exists: "<red>Un hotspot avec un nom similaire est déjà en cours ou en file d'attente. Essayez un autre nom."
+        name-too-long: "<red>Le nom spécifié est trop long."
+        wrong-color: "<red>La couleur '%color_arg%' n'est pas reconnue ou autorisée."
+        limit-reached: "<red>Le nombre maximal de hotspots (%max%) a été atteint. Veuillez attendre la fin de l'un d'eux et réessayer."
+        height-limit: "<red>Les hotspots dans ce monde sont limités à des limites en y entre %lower% et %upper%."
+        already-running: "<yellow>Vous avez déjà créé un hotspot. Terminez-le avec <click:run_command:hotspot end>/hotspot end"
+        out-of-hotspot-reach: "<red>Vous êtes à plus de %blocks% rues de votre emplacement initial ou dans un autre monde."
+        spawn:
+          too-close: "<red>Vous êtes trop près du spawn. Vous devez être à au moins %min_distance% blocs de distance."
+          too-far: "<red>Vous êtes trop loin du spawn. Vous pouvez être seulement à %max_distance% blocs du spawn."
+    join:
+      success: "<green>Vous avez été téléporté au hotspot : %hotspot_name%!"
+      warmup:
+        title: "<yellow>Téléportation dans %time%"
+        subtitle: "<#C000C0>Ne bougez pas et ne subissez pas de dégâts !"
+        cancelled: "<red>Echauffement annulé !"
+      failed:
+        specify-name: "<gray>Veuillez spécifier un hotspot ou un joueur."
+        not-found: "<red>Aucun hotspot ou joueur trouvé avec le nom '%name%'"
+        hosting-already: "<red>Vous hébergez actuellement un hotspot. Vous pouvez le terminer avec /hotspot end"
+        teleport: "<red>Impossible de vous téléporter au hotspot. Réessayez dans quelques secondes."
+    end:
+      success: "<green>Le hotspot '%hotspot_name%' a été terminé avec succès."
+    confirm:
+      nothing-to-confirm: "<gray>Rien à confirmer."
+    notifs:
+      hidden: "<red>Messages de hotspot cachés."
+      shown: "<green>Messages de hotspot affichés."

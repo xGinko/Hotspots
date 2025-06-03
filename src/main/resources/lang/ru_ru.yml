@@ -1,0 +1,69 @@
+########################################################################################################################
+#                                                                                                                      #
+#                                                       ʜᴏᴛsᴘᴏᴛs                                                       #
+#                                            Translation for locale: ru_ru                                             #
+#                                                                                                                      #
+#                    Please use MiniMessage format: https://docs.advntr.dev/minimessage/format.html                    #
+#                                                                                                                      #
+########################################################################################################################
+translator: "chatgpt"
+hotspot:
+  started: "<green>Хотспот '%hotspot_name%' начат. Телепортируйтесь с /hotspot join %hotspot_name%."
+  queued: "<gray>Хотспот '%hotspot_name%' поставлен в очередь."
+  timeout: "<yellow>Хотспот '%hotspot_name%' истек из-за того, что %hotspot_owner% вышел из игры более чем на %time%."
+  ended:
+    cancelled: "<gray>Хотспот '%hotspot_name%' завершен досрочно."
+    expired: "<gray>Хотспот '%hotspot_name%' завершен."
+    death: "<#C000C0>Хотспот '%hotspot_name%' завершен, потому что %hotspot_owner% умер."
+command:
+  no-permission: "<red>У вас нет прав на использование этой команды."
+  cooldown: "<gray>Вы на перезарядке. Повторите попытку через %время%."
+  plugin-busy: "<yellow>Хотспоты заняты. Попробуйте еще раз через несколько секунд."
+  not-hosting-hotspot: "<#C000C0>У вас нет активного хотспота."
+  hotspot:
+    overview:
+      - ""
+      - "                          <#C000C0><bold>ʜᴏᴛsᴘᴏᴛs"
+      - ""
+      - " <#C000C0>/hotspot join <name> <dark_gray>- <gray>Телепортирует вас к хотспоту."
+      - " <#C000C0>/hotspot create (color) (name) <dark_gray>- <gray>Создает хотспот."
+      - " <#C000C0>/hotspot end <dark_gray>- <gray>Завершает ваш хотспот."
+      - " <#C000C0>/hotspot notifs off/on <dark_gray>- <gray>Включает/выключает сообщения хотспота."
+      - ""
+    create:
+      success: "<green>Хотспот %hotspot_name% создан."
+      confirm:
+        - ""
+        - "  <yellow>Ваш хотспот будет создан с следующим названием:"
+        - "  %hotspot_title%"
+        - "  <gray>Подтвердите командой <click:suggest_command:/hotspot confirm>/hotspot confirm."
+        - ""
+      failed:
+        name-exists: "<red>Хотспот с таким именем уже активен или поставлен в очередь. Попробуйте другое имя."
+        name-too-long: "<red>Указанное вами имя слишком длинное."
+        wrong-color: "<red>Цвет '%color_arg%' не распознан или не разрешен."
+        limit-reached: "<red>Достигнуто максимальное количество хотспотов (%max%). Пожалуйста, подождите, пока один из них не завершится, и попробуйте снова."
+        height-limit: "<red>Хотспоты в этом мире ограничены по высоте от %lower% до %upper%."
+        already-running: "<yellow>Вы уже создали хотспот. Завершите его с помощью <click:run_command:hotspot end>/hotspot end"
+        out-of-hotspot-reach: "<red>Вы находитесь более чем в %blocks% кварталах от своего первоначального местоположения или в другом мире."
+        spawn:
+          too-close: "<red>Вы слишком близко к спавну. Вам нужно быть на расстоянии не менее %min_distance% блоков."
+          too-far: "<red>Вы слишком далеко от спавна. Можно быть не более чем на расстоянии %max_distance% блоков от спавна."
+    join:
+      success: "<green>Вы телепортировались к хотспоту: %hotspot_name%!"
+      warmup:
+        title: "<yellow>Телепорт через %time%"
+        subtitle: "<#C000C0>Не двигайтесь и не получайте урон!"
+        cancelled: "<red>Разогрев отменен!"
+      failed:
+        specify-name: "<gray>Пожалуйста, укажите хотспот или игрока."
+        not-found: "<red>Хотспот или игрок с именем '%name%' не найден"
+        hosting-already: "<red>Вы уже хостите хотспот. Вы можете завершить его с помощью /hotspot end"
+        teleport: "<red>Не удалось телепортироваться к хотспоту. Попробуйте еще раз через несколько секунд."
+    end:
+      success: "<green>Хотспот '%hotspot_name%' успешно завершен."
+    confirm:
+      nothing-to-confirm: "<gray>Подтверждать нечего."
+    notifs:
+      hidden: "<red>Сообщения хотспота скрыты."
+      shown: "<green>Сообщения хотспота отображены."

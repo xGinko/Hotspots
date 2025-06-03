@@ -1,0 +1,18 @@
+name: '${name}'
+prefix: Hotspots
+main: me.xginko.hotspots.Hotspots
+authors: [ xGinko ]
+version: '${version}'
+api-version: '1.20'
+description: '${description}'
+website: '${url}'
+folia-supported: true
+load: STARTUP
+
+commands:
+  hotspot:
+    usage: /hotspot [ join, notifs, create, end, confirm ]
+    description: Player commands
+  hotspots:
+    usage: /hotspots [ reload, version ]
+    description: Admin commands
