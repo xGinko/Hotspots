@@ -3,14 +3,12 @@ package me.xginko.hotspots.commands.player.subcommands;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import me.xginko.hotspots.Hotspots;
-import me.xginko.hotspots.PluginPermission;
-import me.xginko.hotspots.commands.BaseCommand;
+import me.xginko.hotspots.commands.BaseCommand.CooldownCommand;
+import me.xginko.hotspots.utils.AdventureUtil;
 import me.xginko.hotspots.utils.Disableable;
 import me.xginko.hotspots.utils.Enableable;
-import me.xginko.hotspots.utils.AdventureUtil;
-import me.xginko.hotspots.utils.Util;
+import me.xginko.hotspots.utils.permissions.HotspotsPermission;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,15 +21,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public final class ConfirmSubCmd extends BaseCommand implements Enableable, Disableable {
+public final class ConfirmSubCmd extends CooldownCommand implements Enableable, Disableable {
 
     private static Cache<UUID, Runnable> pendingConfirms;
 
-    private final @NotNull Cache<UUID, Long> command_cooldowns;
-
     public ConfirmSubCmd() {
-        super("confirm");
-        this.command_cooldowns = Caffeine.newBuilder().expireAfterWrite(Duration.ofHours(24)).build();
+        super("confirm", HotspotsPermission.BYPASS_CONFIRM_COOLDOWN, Hotspots.config().commands_confirm_cooldown_millis);
     }
 
     public static void prepareToConfirm(UUID uuid, Runnable confirm) {
@@ -64,20 +59,9 @@ public final class ConfirmSubCmd extends BaseCommand implements Enableable, Disa
             return true;
         }
 
-        if (!player.hasPermission(PluginPermission.BYPASS_CONFIRM_COOLDOWN.get())) {
-            Long lastUse = command_cooldowns.getIfPresent(player.getUniqueId());
-            if (lastUse != null) {
-                long time_since_last_use = System.currentTimeMillis() - lastUse;
-                if (time_since_last_use < Hotspots.config().commands_confirm_cooldown_millis) {
-                    player.sendMessage(Hotspots.translation(player).cmd_cooldown.replaceText(TextReplacementConfig.builder()
-                            .matchLiteral("%time%")
-                            .replacement(Util.formatDuration(Duration.ofMillis(Math.max(0L, Hotspots.config().commands_confirm_cooldown_millis - time_since_last_use))))
-                            .build()));
-                    return true;
-                }
-            } else {
-                command_cooldowns.put(player.getUniqueId(), System.currentTimeMillis());
-            }
+        if (isOnCommandCooldown(player)) {
+            sendCommandCooldownMessage(player);
+            return true;
         }
 
         @Nullable Runnable pendingConfirm = pendingConfirms.getIfPresent(player.getUniqueId());
@@ -86,6 +70,7 @@ public final class ConfirmSubCmd extends BaseCommand implements Enableable, Disa
             player.sendMessage(Hotspots.translation(player).confirm_nothing_pending);
         } else {
             CompletableFuture.runAsync(pendingConfirm).thenRun(() -> pendingConfirms.invalidate(player.getUniqueId()));
+            putOnCommandCooldown(player.getUniqueId());
         }
 
         return true;

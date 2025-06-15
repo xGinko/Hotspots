@@ -54,20 +54,20 @@ public final class HotspotsConfig {
                 .addSolidLine());
 
         this.default_locale = LocaleUtil.localeForLanguageTag(getString("general.default-language", "en_us", """
-                The default language that will be used if auto-language\s
+                The default language that will be used if auto-language
                 is false or no matching language file was found."""));
         this.auto_lang = getBoolean("general.auto-language", true, """
-                If set to true, the plugin will send messages to players\s
-                based on what locale their client is set to.\s
-                This of course requires that there is a translation file\s
+                If set to true, the plugin will send messages to players
+                based on what locale their client is set to.
+                This of course requires that there is a translation file
                 available for that locale inside the plugins lang folder.""");
 
         this.database_max_pool_size = Math.max(1, getInt("database.max-pool-size", Bukkit.getMaxPlayers() * 2, """
-                Basically this value will determine the maximum number of actual\s
-                connections to the database backend.\s
-                When the pool reaches this size, and no idle connections are available,\s
-                calls to the database will block and time out\s
-                Setting it to the double the amount of max players for the server is\s
+                Basically this value will determine the maximum number of actual
+                connections to the database backend.
+                When the pool reaches this size, and no idle connections are available,
+                calls to the database will block and time out
+                Setting it to the double the amount of max players for the server is
                 probably a good idea."""));
         this.hotspot_max_store_time = TimeUnit.MINUTES.toMillis(
                 Math.max(1, getLong("database.max-hotspot-store-time-minutes", 60, """
@@ -75,40 +75,35 @@ public final class HotspotsConfig {
 
         this.commands_create_cooldown_millis = TimeUnit.SECONDS.toMillis(
                 Math.max(1, getLong("commands.create.cooldown-seconds", 1, """
-                Time in seconds a player needs to wait before they can\s
-                use the /hotspot create command again.\s
-                Max is 24 hours.""")));
+                Time in seconds a player needs to wait before they can
+                use the /hotspot create command again.""")));
         this.commands_join_cooldown_millis = TimeUnit.SECONDS.toMillis(
                 Math.max(1, getLong("commands.join.cooldown-seconds", 1, """
-                Time in seconds a player needs to wait before they can\s
-                use the /hotspot join command again.\s
-                Max is 24 hours.""")));
+                Time in seconds a player needs to wait before they can
+                use the /hotspot join command again.""")));
         this.commands_notifs_cooldown_millis = TimeUnit.SECONDS.toMillis(
                 Math.max(1, getLong("commands.notifs.cooldown-seconds", 1, """
-                Time in seconds a player needs to wait before they can\s
-                use the /hotspot notifs command again.\s
-                Max is 24 hours.""")));
+                Time in seconds a player needs to wait before they can
+                use the /hotspot notifs command again.""")));
         this.commands_confirm_cooldown_millis = TimeUnit.SECONDS.toMillis(
                 Math.max(1, getLong("commands.confirm.cooldown-seconds", 1, """
-                Time in seconds a player needs to wait before they can\s
-                use the /hotspot confirm command again.\s
-                Max is 24 hours.""")));
+                Time in seconds a player needs to wait before they can
+                use the /hotspot confirm command again.""")));
         this.commands_confirm_timeout_millis = TimeUnit.SECONDS.toMillis(
                 Math.max(1, getLong("commands.confirm.timeout-seconds", 16, """
-                Time in millis /hotspot confirm can be used to confirm a previous\s
+                Time in millis /hotspot confirm can be used to confirm a previous
                 /hotspot create command.""")));
         this.commands_end_cooldown_millis = TimeUnit.SECONDS.toMillis(
                 Math.max(1, getLong("commands.end.cooldown-seconds", 3, """
-                Time in seconds a player needs to wait before they can\s
-                use the /hotspot end command again.\s
-                Max is 24 hours.""")));
+                Time in seconds a player needs to wait before they can
+                use the /hotspot end command again.""")));
 
         this.teleport_radius = Math.max(1, getInt("teleport.location.horizontal-radius", 8, """
-                Radius in blocks in XZ-direction around the center location of the\s
+                Radius in blocks in XZ-direction around the center location of the
                 hotspot that will be used for random teleportation."""));
         this.teleport_radius_sqared = MathHelper.square(teleport_radius);
         this.teleport_warmup_seconds = Duration.ofSeconds(Math.max(1, getLong("teleport.warmup.seconds", 12, """
-                Seconds a player will have to stand still and take no damage\s
+                Seconds a player will have to stand still and take no damage
                 to teleport to a hotspot.""")));
         this.teleport_warmup_times = net.kyori.adventure.title.Title.Times.times(
                 Duration.ofMillis(Math.max(0, getLong("teleport.warmup.title.fade-in-millis", 0,
@@ -121,29 +116,29 @@ public final class HotspotsConfig {
         this.hotspot_life_time = TimeUnit.SECONDS.toMillis(Math.max(1, getLong("hotspots.life-time-seconds", 900, """
                 Duration in seconds a hotspot should last before expiring.""")));
         this.hotspot_tick_period_millis = Math.max(1, getLong("hotspots.tick-interval-millis", 1000, """
-                The interval in milli seconds the hotspots should be ticked.\s
-                A higher number could give better performance results during load\s
+                The interval in milli seconds the hotspots should be ticked.
+                A higher number could give better performance results during load
                 but will make the logic more inaccurate the higher you set it."""));
         this.max_active_hotspots = Math.max(1, getInt("hotspots.max-active-hotspots", 3, """
-                The amount of hotspots that can be active at the same time.\s
-                If a player attempts to create a hotspot that would exceed\s
+                The amount of hotspots that can be active at the same time.
+                If a player attempts to create a hotspot that would exceed
                 this number, the action will simply be denied."""));
         this.disconnect_timeout_seconds = Math.max(1, getLong("hotspots.timeout-on-disconnect-in-seconds", 30, """
-                How many seconds a hotspot will remain active after the creator\s
+                How many seconds a hotspot will remain active after the creator
                 left the server for whatever reason."""));
 
         this.bossbar_reverse_progress = getBoolean("hotspots.bossbar.reverse-progress", true, """
                 If set to true, will go from (visually) full hp to no hp.""");
         this.bossbar_title = MiniMessage.miniMessage().deserialize(AdventureUtil.replaceAmpersand(getString(
                 "hotspots.bossbar.title.default", "<#C000C0>%player%'s Hotspot", """
-                        The title string that should be shown above the BossBar if.\s
-                        the player didn't specify a name.\s
-                        Format is using MiniMessage tags:\s
-                        https://docs.advntr.dev/minimessage/format.html\s
-                        The %player% placeholder will be replaced with the player's\s
+                        The title string that should be shown above the BossBar if.
+                        the player didn't specify a name.
+                        Format is using MiniMessage tags:
+                        https://docs.advntr.dev/minimessage/format.html
+                        The %player% placeholder will be replaced with the player's
                         display name.""")));
         this.bossbar_title_maxlength = Math.max(1, getInt("hotspots.bossbar.title.max-length", 64, """
-                The max length of the name String passed to the create command.\s
+                The max length of the name String passed to the create command.
                 Set to a higher number so players can use more complex MiniMessage tags."""));
         this.bossbar_name_suggestions = getList("hotspots.bossbar.title.suggestions", List.of(
                 "<#C000C0><bold>Magenta Hotspot",
@@ -151,13 +146,13 @@ public final class HotspotsConfig {
                 "<gradient:#5e4fa2:#f79459:red>Gradient Hotspot",
                 "<rainbow>Rainbow Hotspot"
         ), """
-                The suggestions players will see in their tabcompletes when using\s
-                the create command. This is mainly to let them know they can customize\s
+                The suggestions players will see in their tabcompletes when using
+                the create command. This is mainly to let them know they can customize
                 their hotspot and show them how.""");
         String colors_docs = "https://jd.advntr.dev/api/4.9.3/net/kyori/adventure/bossbar/BossBar.Color.html";
         this.bossbar_colors = getList("hotspots.bossbar.colors", Arrays.stream(BossBar.Color.values()).map(Enum::name).toList(), """
-                Valid colors the a hotspot BossBar can have.\s
-                Colors will be chosen randomly from this list on creation,\s
+                Valid colors the a hotspot BossBar can have.
+                Colors will be chosen randomly from this list on creation,
                 should the player not specify it themselves.""" +
                 "\nAvailable options:\n" + String.join(", ", Arrays.stream(BossBar.Color.values()).map(Enum::name).toList()))
                 .stream()

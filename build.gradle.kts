@@ -26,6 +26,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("org.apache.logging.log4j:log4j-core:2.24.3")
+    compileOnly("net.luckperms:api:5.4")
 
     implementation("com.github.thatsmusic99:ConfigurationMaster-API:v2.0.0-rc.3")
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")

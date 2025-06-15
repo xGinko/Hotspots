@@ -2,7 +2,7 @@ package me.xginko.hotspots.modules.requirements;
 
 import io.github.thatsmusic99.configurationmaster.api.ConfigSection;
 import me.xginko.hotspots.Hotspots;
-import me.xginko.hotspots.PluginPermission;
+import me.xginko.hotspots.utils.permissions.HotspotsPermission;
 import me.xginko.hotspots.events.player.PlayerHotspotConfirmEvent;
 import me.xginko.hotspots.events.player.PlayerHotspotCreateEvent;
 import me.xginko.hotspots.modules.Module;
@@ -76,7 +76,7 @@ public class WorldBounds extends Module implements Listener {
     private void handleHotspotCreate(PlayerHotspotCreateEvent event) {
         Location hotspotLocation = event.getHotspot().getCenterLocation();
         if (!hotspot_bounds.containsKey(hotspotLocation.getWorld().getName())) return;
-        if (event.getPlayer().hasPermission(PluginPermission.BYPASS_HOTSPOT_BOUNDS.get())) return;
+        if (HotspotsPermission.BYPASS_HOTSPOT_BOUNDS.test(event.getPlayer()).toBoolean()) return;
 
         HotspotBounds bounds = hotspot_bounds.get(hotspotLocation.getWorld().getName());
 

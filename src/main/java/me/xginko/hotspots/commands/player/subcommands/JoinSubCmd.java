@@ -1,17 +1,14 @@
 package me.xginko.hotspots.commands.player.subcommands;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import me.xginko.hotspots.Hotspots;
 import me.xginko.hotspots.Hotspot;
-import me.xginko.hotspots.PluginPermission;
+import me.xginko.hotspots.Hotspots;
 import me.xginko.hotspots.commands.BaseCommand;
 import me.xginko.hotspots.commands.player.HotspotCommand;
 import me.xginko.hotspots.managers.HotspotManager;
 import me.xginko.hotspots.managers.Manager;
 import me.xginko.hotspots.managers.WarmupManager;
 import me.xginko.hotspots.utils.AdventureUtil;
-import me.xginko.hotspots.utils.Util;
+import me.xginko.hotspots.utils.permissions.HotspotsPermission;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.command.Command;
@@ -20,19 +17,14 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
-public final class JoinSubCmd extends BaseCommand {
-
-    private final @NotNull Cache<UUID, Long> command_cooldowns;
+public final class JoinSubCmd extends BaseCommand.CooldownCommand {
 
     public JoinSubCmd() {
-        super("join");
-        this.command_cooldowns = Caffeine.newBuilder().expireAfterWrite(Duration.ofHours(24)).build();
+        super("join", HotspotsPermission.BYPASS_JOIN_COOLDOWN, Hotspots.config().commands_join_cooldown_millis);
     }
 
     @Override
@@ -49,7 +41,7 @@ public final class JoinSubCmd extends BaseCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!sender.hasPermission(PluginPermission.JOIN_CMD.get())) {
+        if (!HotspotsPermission.JOIN_CMD.test(sender).toBoolean()) {
             sender.sendMessage(Hotspots.translation(sender).cmd_no_permission);
             return true;
         }
@@ -59,20 +51,9 @@ public final class JoinSubCmd extends BaseCommand {
             return true;
         }
 
-        if (!player.hasPermission(PluginPermission.BYPASS_JOIN_COOLDOWN.get())) {
-            Long lastUse = command_cooldowns.getIfPresent(player.getUniqueId());
-            if (lastUse != null) {
-                long time_since_last_use = System.currentTimeMillis() - lastUse;
-                if (time_since_last_use < Hotspots.config().commands_join_cooldown_millis) {
-                    player.sendMessage(Hotspots.translation(player).cmd_cooldown.replaceText(TextReplacementConfig.builder()
-                            .matchLiteral("%time%")
-                            .replacement(Util.formatDuration(Duration.ofMillis(Math.max(0L, Hotspots.config().commands_join_cooldown_millis - time_since_last_use))))
-                            .build()));
-                    return true;
-                }
-            } else {
-                command_cooldowns.put(player.getUniqueId(), System.currentTimeMillis());
-            }
+        if (isOnCommandCooldown(player)) {
+            sendCommandCooldownMessage(player);
+            return true;
         }
 
         if (args.length < 2) {
@@ -93,6 +74,7 @@ public final class JoinSubCmd extends BaseCommand {
                     .replaceText(TextReplacementConfig.builder().matchLiteral("%name%").replacement(name).build()));
         } else {
             Manager.get(WarmupManager.class).startWarmup(player, hotspot);
+            putOnCommandCooldown(player.getUniqueId());
         }
 
         return true;

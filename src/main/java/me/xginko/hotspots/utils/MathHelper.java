@@ -31,10 +31,10 @@ public final class MathHelper {
     }
 
     public static double clamp(double val, double min, double max) {
-        return Math.clamp(val, min, max); // This clamp method is different from java lang Math :I
+        return Math.clamp(val, min, max);
     }
 
     public static float clamp(float val, float min, float max) {
-        return Math.clamp(val, min, max); // This clamp method is different from java lang Math :I
+        return Math.clamp(val, min, max);
     }
 }

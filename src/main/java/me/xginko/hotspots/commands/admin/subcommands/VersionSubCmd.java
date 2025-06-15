@@ -2,7 +2,7 @@ package me.xginko.hotspots.commands.admin.subcommands;
 
 import io.papermc.paper.plugin.configuration.PluginMeta;
 import me.xginko.hotspots.Hotspots;
-import me.xginko.hotspots.PluginPermission;
+import me.xginko.hotspots.utils.permissions.HotspotsPermission;
 import me.xginko.hotspots.commands.BaseCommand;
 import me.xginko.hotspots.utils.AdventureUtil;
 import net.kyori.adventure.text.Component;
@@ -29,7 +29,7 @@ public final class VersionSubCmd extends BaseCommand {
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!sender.hasPermission(PluginPermission.VERSION_CMD.get())) {
+        if (!sender.hasPermission(HotspotsPermission.VERSION_CMD.get())) {
             sender.sendMessage(Hotspots.translation(sender).cmd_no_permission);
             return true;
         }

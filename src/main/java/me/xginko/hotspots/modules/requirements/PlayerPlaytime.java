@@ -1,7 +1,7 @@
 package me.xginko.hotspots.modules.requirements;
 
 import me.xginko.hotspots.Hotspots;
-import me.xginko.hotspots.PluginPermission;
+import me.xginko.hotspots.utils.permissions.HotspotsPermission;
 import me.xginko.hotspots.events.player.PlayerHotspotConfirmEvent;
 import me.xginko.hotspots.events.player.PlayerHotspotCreateEvent;
 import me.xginko.hotspots.modules.Module;
@@ -48,11 +48,11 @@ public class PlayerPlaytime extends Module implements Listener {
 
     private void checkPlaytime(PlayerHotspotCreateEvent event) {
         final long playtimeMinutes = TimeUnit.MILLISECONDS.toMinutes(
-                // Statistic.PLAY_ONE_MINUTE actually returns the playtime in ticks... yea.
+                // Statistic.PLAY_ONE_MINUTE actually returns the playtime in ticks :confused:
                 event.getPlayer().getStatistic(Statistic.PLAY_ONE_MINUTE) * 50L);
 
         if (playtimeMinutes >= minimum_playtime_minutes
-                || event.getPlayer().hasPermission(PluginPermission.BYPASS_PLAYTIME_REQUIREMENT.get())) {
+                || HotspotsPermission.BYPASS_PLAYTIME_REQUIREMENT.test(event.getPlayer()).toBoolean()) {
             return;
         }
 

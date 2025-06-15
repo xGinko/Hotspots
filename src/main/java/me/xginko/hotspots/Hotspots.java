@@ -13,6 +13,8 @@ import me.xginko.hotspots.modules.Module;
 import me.xginko.hotspots.utils.AdventureUtil;
 import me.xginko.hotspots.utils.LocaleUtil;
 import me.xginko.hotspots.utils.Util;
+import me.xginko.hotspots.utils.permissions.HotspotsPermission;
+import me.xginko.hotspots.utils.permissions.PermissionHandler;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.pointer.Pointered;
 import net.kyori.adventure.text.Component;
@@ -50,6 +52,7 @@ public final class Hotspots extends JavaPlugin {
     private static HotspotsConfig config;
     private static Map<Locale, Translation> translations;
     private static Database database;
+    private static PermissionHandler permissions;
 
     private AtomicInteger exceptionCount;
     private ScheduledTask exceptionCountResetTask;
@@ -83,7 +86,8 @@ public final class Hotspots extends JavaPlugin {
             startup(Manager.reloadManagers(), "managers");
             startup(Module.reloadModules(), "modules");
             startup(PluginYMLCmd.reloadCommands(), "commands");
-            startup(PluginPermission.registerAll(), "permissions");
+            startup(HotspotsPermission.registerAll()
+                    && (permissions = PermissionHandler.create(instance)) != null, "permissions");
             startup(config.saveConfig(), "config save");
 
             logger.info(Util.centerWithSpaces(Component.text(" All set.",
@@ -104,7 +108,11 @@ public final class Hotspots extends JavaPlugin {
         PluginYMLCmd.disableAll();
         Module.disableAll();
         Manager.disableAll();
-        PluginPermission.unregisterAll();
+        HotspotsPermission.unregisterAll();
+        if (permissions != null) {
+            permissions.disable();
+            permissions = null;
+        }
         if (database != null) {
             database.disable();
             database = null;
@@ -129,6 +137,10 @@ public final class Hotspots extends JavaPlugin {
 
     public static @NotNull Hotspots getInstance() {
         return instance;
+    }
+
+    public static @NotNull PermissionHandler permissions() {
+        return permissions;
     }
 
     public static @NotNull Database database() {

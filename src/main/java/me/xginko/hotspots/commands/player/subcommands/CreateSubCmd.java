@@ -1,18 +1,16 @@
 package me.xginko.hotspots.commands.player.subcommands;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import me.xginko.hotspots.Hotspots;
 import me.xginko.hotspots.Hotspot;
-import me.xginko.hotspots.PluginPermission;
+import me.xginko.hotspots.Hotspots;
 import me.xginko.hotspots.commands.BaseCommand;
+import me.xginko.hotspots.commands.BaseCommand.CooldownCommand;
 import me.xginko.hotspots.events.player.PlayerHotspotConfirmEvent;
 import me.xginko.hotspots.events.player.PlayerHotspotCreateEvent;
 import me.xginko.hotspots.managers.HotspotManager;
 import me.xginko.hotspots.managers.Manager;
-import me.xginko.hotspots.utils.BossBarUtil;
 import me.xginko.hotspots.utils.AdventureUtil;
-import me.xginko.hotspots.utils.Util;
+import me.xginko.hotspots.utils.BossBarUtil;
+import me.xginko.hotspots.utils.permissions.HotspotsPermission;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
@@ -22,23 +20,18 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
-public final class CreateSubCmd extends BaseCommand {
-
-    private final @NotNull Cache<UUID, Long> command_cooldowns;
+public final class CreateSubCmd extends CooldownCommand {
 
     public CreateSubCmd() {
-        super("create");
-        this.command_cooldowns = Caffeine.newBuilder().expireAfterWrite(Duration.ofHours(24)).build();
+        super("create", HotspotsPermission.BYPASS_CREATE_COOLDOWN, Hotspots.config().commands_create_cooldown_millis);
     }
 
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!sender.hasPermission(PluginPermission.CREATE_CMD.get())) {
+        if (!sender.hasPermission(HotspotsPermission.CREATE_CMD.get())) {
             return Collections.emptyList();
         }
 
@@ -61,7 +54,7 @@ public final class CreateSubCmd extends BaseCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!sender.hasPermission(PluginPermission.CREATE_CMD.get())) {
+        if (!sender.hasPermission(HotspotsPermission.CREATE_CMD.get())) {
             sender.sendMessage(Hotspots.translation(sender).cmd_no_permission);
             return true;
         }
@@ -71,20 +64,9 @@ public final class CreateSubCmd extends BaseCommand {
             return true;
         }
 
-        if (!player.hasPermission(PluginPermission.BYPASS_CREATE_COOLDOWN.get())) {
-            Long lastUse = command_cooldowns.getIfPresent(player.getUniqueId());
-            if (lastUse != null) {
-                long time_since_last_use = System.currentTimeMillis() - lastUse;
-                if (time_since_last_use < Hotspots.config().commands_create_cooldown_millis) {
-                    player.sendMessage(Hotspots.translation(player).cmd_cooldown.replaceText(TextReplacementConfig.builder()
-                            .matchLiteral("%time%")
-                            .replacement(Util.formatDuration(Duration.ofMillis(Math.max(0L, Hotspots.config().commands_create_cooldown_millis - time_since_last_use))))
-                            .build()));
-                    return true;
-                }
-            } else {
-                command_cooldowns.put(player.getUniqueId(), System.currentTimeMillis());
-            }
+        if (isOnCommandCooldown(player)) {
+            sendCommandCooldownMessage(player);
+            return true;
         }
 
         @Nullable HotspotManager hotspotManager = Manager.get(HotspotManager.class);
@@ -164,6 +146,8 @@ public final class CreateSubCmd extends BaseCommand {
             if (!hotspotConfirmEvent.callEvent()) {
                 return;
             }
+
+            putOnCommandCooldown(player.getUniqueId());
 
             // Add hotspot to queue, leaving the manager to pull it into ticking when the time is right
             hotspotManager.getQueuedHotspots().add(hotspotConfirmEvent.getHotspot());
