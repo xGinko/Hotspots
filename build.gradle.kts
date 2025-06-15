@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.xginko"
-version = "1.0.0"
+version = "1.1.0-SNAPSHOT"
 description = "Temporary teleport locations that other players can teleport to."
 
 repositories {
