@@ -41,7 +41,7 @@ public final class EndSubCmd extends BaseCommand.CooldownCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!HotspotsPermission.END_CMD.test(sender).toBoolean() && !HotspotsPermission.END_CMD_OTHER.test(sender).toBoolean()) {
+        if (!HotspotsPermission.END_CMD.check(sender).toBoolean() && !HotspotsPermission.END_CMD_OTHER.check(sender).toBoolean()) {
             sender.sendMessage(Hotspots.translation(sender).cmd_no_permission);
             return true;
         }

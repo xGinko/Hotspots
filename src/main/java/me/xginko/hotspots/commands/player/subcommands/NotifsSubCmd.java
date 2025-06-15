@@ -27,7 +27,7 @@ public final class NotifsSubCmd extends BaseCommand.CooldownCommand {
 
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        return args.length == 2 && HotspotsPermission.NOTIFS_CMD.test(sender).toBoolean() ? tabCompletes : Collections.emptyList();
+        return args.length == 2 && HotspotsPermission.NOTIFS_CMD.check(sender).toBoolean() ? tabCompletes : Collections.emptyList();
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class NotifsSubCmd extends BaseCommand.CooldownCommand {
             return true;
         }
 
-        if (!HotspotsPermission.NOTIFS_CMD.test(player).toBoolean()) {
+        if (!HotspotsPermission.NOTIFS_CMD.check(player).toBoolean()) {
             player.sendMessage(Hotspots.translation(player).cmd_no_permission);
             return true;
         }

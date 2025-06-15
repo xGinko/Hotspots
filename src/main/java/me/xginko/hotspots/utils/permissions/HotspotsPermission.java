@@ -20,6 +20,9 @@ public enum HotspotsPermission {
     END_CMD_OTHER(new Permission("hotspots.cmd.end.other", PermissionDefault.OP)),
 
     CREATE_CMD(new Permission("hotspots.cmd.create", PermissionDefault.OP)),
+    CREATE_CMD_BOSSBAR(new Permission("hotspots.cmd.create.bossbar", PermissionDefault.OP)),
+    CREATE_CMD_TITLE(new Permission("hotspots.cmd.create.title", PermissionDefault.OP)),
+
     END_CMD(new Permission("hotspots.cmd.end", PermissionDefault.TRUE)),
     JOIN_CMD(new Permission("hotspots.cmd.join", PermissionDefault.TRUE)),
     NOTIFS_CMD(new Permission("hotspots.cmd.notifs", PermissionDefault.TRUE));
@@ -34,7 +37,7 @@ public enum HotspotsPermission {
         return permission;
     }
 
-    public TriState test(Permissible permissible) {
+    public TriState check(Permissible permissible) {
         return Hotspots.permissions().permissionValue(permissible, permission.getName());
     }
 

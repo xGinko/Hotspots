@@ -54,7 +54,7 @@ public final class CreateSubCmd extends CooldownCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!sender.hasPermission(HotspotsPermission.CREATE_CMD.get())) {
+        if (!HotspotsPermission.CREATE_CMD.check(sender).toBoolean()) {
             sender.sendMessage(Hotspots.translation(sender).cmd_no_permission);
             return true;
         }
@@ -83,25 +83,36 @@ public final class CreateSubCmd extends CooldownCommand {
 
         Hotspot hotspot;
 
-        if (args.length == 1) { // Player has just entered "/hotspot create", therefore we use defaults
+        if (args.length == 1 ||
+                (!HotspotsPermission.CREATE_CMD_BOSSBAR.check(player).toBoolean() && !HotspotsPermission.CREATE_CMD_TITLE.check(player).toBoolean())) {
+            // Player has just entered "/hotspot create" or does not have permission for more
             hotspot = new Hotspot(player, BossBarUtil.getBossBar(player.displayName()));
-        } else {
+        }
+
+        else {
             // Get BossBar color
             final BossBar.Color color;
             try {
-                color = BossBar.Color.valueOf(args[1]);
-                if (!Hotspots.config().bossbar_colors.contains(color))
-                    throw new IllegalArgumentException();
+                if (HotspotsPermission.CREATE_CMD_BOSSBAR.check(player).toBoolean()) {
+                    color = BossBar.Color.valueOf(args[1]);
+                    if (!Hotspots.config().bossbar_colors.contains(color)) throw new IllegalArgumentException();
+                } else {
+                    // Always use the first entry from the config for players without permission
+                    color = Hotspots.config().bossbar_colors.get(0);
+                }
             } catch (IllegalArgumentException e) {
                 player.sendMessage(Hotspots.translation(player).create_failed_color
                         .replaceText(TextReplacementConfig.builder().matchLiteral("%color_arg%").replacement(args[1]).build()));
                 return true;
             }
 
-            // Get BossBar name
-            if (args.length == 2) { // Player has only specified a BossBar Color, ex. "/hotspot create PINK"
+            if (args.length == 2 || !HotspotsPermission.CREATE_CMD_TITLE.check(player).toBoolean()) {
+                // Player has only specified a BossBar Color, ex. "/hotspot create PINK" or does not have title permissions
                 hotspot = new Hotspot(player, BossBarUtil.getBossBar(player.displayName(), color));
-            } else { // Player has specified a BossBar Color and name, ex. "/hotspot create PINK <rainbow>love u"
+            }
+
+            else {
+                // Player has specified a BossBar Color and name, ex. "/hotspot create PINK <rainbow>love u"
                 String nameArg = BaseCommand.mergeArgs(args, 2).replace("%player%", player.getName());
                 try {
                     hotspot = new Hotspot(player, BossBarUtil.getBossBar(nameArg, color));

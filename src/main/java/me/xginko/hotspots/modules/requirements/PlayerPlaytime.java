@@ -52,7 +52,7 @@ public class PlayerPlaytime extends Module implements Listener {
                 event.getPlayer().getStatistic(Statistic.PLAY_ONE_MINUTE) * 50L);
 
         if (playtimeMinutes >= minimum_playtime_minutes
-                || HotspotsPermission.BYPASS_PLAYTIME_REQUIREMENT.test(event.getPlayer()).toBoolean()) {
+                || HotspotsPermission.BYPASS_PLAYTIME_REQUIREMENT.check(event.getPlayer()).toBoolean()) {
             return;
         }
 

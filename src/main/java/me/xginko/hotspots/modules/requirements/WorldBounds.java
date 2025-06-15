@@ -76,7 +76,7 @@ public class WorldBounds extends Module implements Listener {
     private void handleHotspotCreate(PlayerHotspotCreateEvent event) {
         Location hotspotLocation = event.getHotspot().getCenterLocation();
         if (!hotspot_bounds.containsKey(hotspotLocation.getWorld().getName())) return;
-        if (HotspotsPermission.BYPASS_HOTSPOT_BOUNDS.test(event.getPlayer()).toBoolean()) return;
+        if (HotspotsPermission.BYPASS_HOTSPOT_BOUNDS.check(event.getPlayer()).toBoolean()) return;
 
         HotspotBounds bounds = hotspot_bounds.get(hotspotLocation.getWorld().getName());
 

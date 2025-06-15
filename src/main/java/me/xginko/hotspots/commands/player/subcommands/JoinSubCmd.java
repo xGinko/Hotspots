@@ -41,7 +41,7 @@ public final class JoinSubCmd extends BaseCommand.CooldownCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!HotspotsPermission.JOIN_CMD.test(sender).toBoolean()) {
+        if (!HotspotsPermission.JOIN_CMD.check(sender).toBoolean()) {
             sender.sendMessage(Hotspots.translation(sender).cmd_no_permission);
             return true;
         }

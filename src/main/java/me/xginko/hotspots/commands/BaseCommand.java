@@ -83,7 +83,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         }
 
         public boolean isOnCommandCooldown(Player player) {
-            if (bypassPermission.test(player).toBoolean()) {
+            if (bypassPermission.check(player).toBoolean()) {
                 return false;
             }
 
