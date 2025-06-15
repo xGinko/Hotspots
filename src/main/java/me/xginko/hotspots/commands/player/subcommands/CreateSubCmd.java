@@ -31,11 +31,11 @@ public final class CreateSubCmd extends CooldownCommand {
 
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!sender.hasPermission(HotspotsPermission.CREATE_CMD.get())) {
+        if (!HotspotsPermission.CREATE_CMD.check(sender).toBoolean()) {
             return Collections.emptyList();
         }
 
-        if (args.length == 2) {
+        if (args.length == 2 && HotspotsPermission.CREATE_CMD_BOSSBAR.check(sender).toBoolean()) {
             return Hotspots.config().bossbar_colors.stream()
                     .map(Enum::name)
                     .filter(cmd -> cmd.startsWith(args[1]))
@@ -43,7 +43,7 @@ public final class CreateSubCmd extends CooldownCommand {
                     .toList();
         }
 
-        if (args.length == 3) {
+        if (args.length == 3 && HotspotsPermission.CREATE_CMD_TITLE.check(sender).toBoolean()) {
             return Hotspots.config().bossbar_name_suggestions.stream()
                     .map(suggestion -> suggestion.replace("%player%", sender.getName()))
                     .toList();
