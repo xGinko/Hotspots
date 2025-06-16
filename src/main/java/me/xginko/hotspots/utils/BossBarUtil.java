@@ -19,30 +19,19 @@ public final class BossBarUtil {
         return json.toJSONString();
     }
 
-    public static @NotNull BossBar fromJSONString(String json_string) throws ParseException, NullPointerException {
+    public static @NotNull BossBar fromJSONString(String json_string) throws ParseException, IllegalArgumentException {
         JSONObject json = (JSONObject) new JSONParser().parse(json_string);
-        Component name = MiniMessage.miniMessage().deserialize((String) json.get("name"));
-        BossBar.Color color;
-        try {
-            color = BossBar.Color.valueOf((String) json.get("color"));
-        } catch (IllegalArgumentException e) {
-            color = getRandomBossBarColor();
-        }
         return BossBar.bossBar(
-                name,
+                MiniMessage.miniMessage().deserialize((String) json.get("name")),
                 Hotspots.config().bossbar_reverse_progress ? BossBar.MAX_PROGRESS : BossBar.MIN_PROGRESS, // Will update when ticked
-                color,
+                BossBar.Color.valueOf((String) json.get("color")),
                 Hotspots.config().bossbar_overlay, // Allows applying overlay settings on reload
                 Hotspots.config().bossbar_flags // Allows applying flag settings on reload
         );
     }
 
-    public static @NotNull BossBar.Color getRandomBossBarColor() {
-        return Util.getRandomElement(Hotspots.config().bossbar_colors);
-    }
-
     public static @NotNull BossBar getBossBar(Component player_name) {
-        return getBossBar(player_name, getRandomBossBarColor());
+        return getBossBar(player_name, Util.getRandomElement(Hotspots.config().bossbar_colors));
     }
 
     public static @NotNull BossBar getBossBar(Component player_name, BossBar.Color color) {

@@ -15,7 +15,7 @@ public final class Util {
     public static final Random RANDOM = new Random();
 
     public static <T> T getRandomElement(List<T> list) {
-        return list.get(RANDOM.nextInt(list.size()));
+        return list.size() == 1 ? list.get(0) : list.get(RANDOM.nextInt(list.size()));
     }
 
     public static @NotNull Color colorFromHexString(String hexString) throws NumberFormatException {
