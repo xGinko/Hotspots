@@ -39,20 +39,31 @@ public final class NotificationManager extends Manager implements Listener {
             return CompletableFuture.completedFuture(notification_settings.get(uuid));
         }
 
-        return Hotspots.database().getNotificationsEnabled(uuid)
-                .thenApply(enabled -> notification_settings.put(uuid, enabled));
+        return Hotspots.database()
+                .getNotificationsEnabled(uuid)
+                .thenApply(notificationsEnabledStatus -> {
+                    notification_settings.put(uuid, notificationsEnabledStatus); // Cache on request
+                    return notificationsEnabledStatus; // Return database result
+                });
     }
 
     public @NotNull CompletableFuture<Boolean> setNotificationsEnabled(@NotNull UUID uuid, boolean enable) {
         notification_settings.put(uuid, enable);
 
         // Hide/Show Hotspot BossBars for desired target audience
-        Audience entity = plugin.getServer().getEntity(uuid);
-        HotspotManager hotspotManager = Manager.get(HotspotManager.class);
-        if (entity != null && hotspotManager != null) {
-            if (enable) hotspotManager.hideHotspotsFor(entity);
-            else hotspotManager.showHotspotsFor(entity);
-        }
+        plugin.getServer().getGlobalRegionScheduler().execute(plugin, () -> {
+            // global region scheduler to avoid async getEntity call
+            Audience entity = plugin.getServer().getEntity(uuid);
+            if (entity == null) return;
+            HotspotManager hotspotManager = Manager.get(HotspotManager.class);
+            if (hotspotManager == null) return;
+
+            if (enable) {
+                hotspotManager.hideHotspotsFor(entity);
+            } else {
+                hotspotManager.showHotspotsFor(entity);
+            }
+        });
 
         return Hotspots.database().setNotificationsEnabled(uuid, enable);
     }
