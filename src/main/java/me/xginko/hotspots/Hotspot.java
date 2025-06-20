@@ -47,7 +47,7 @@ public final class Hotspot {
     private @NotNull Location centerLocation;
     private @NotNull BossBar bossBar;
     private long creationTime, lastTickTime, aliveTimeMillis;
-    private boolean dead;
+    private boolean hasEnded;
 
     public Hotspot(
             @NotNull UUID creator, @NotNull Location centerLocation, @NotNull String creatorName,
@@ -68,7 +68,7 @@ public final class Hotspot {
         this.creationTime = creationTime;
         this.lastTickTime = 0L;
         this.aliveTimeMillis = aliveTimeMillis;
-        this.dead = false;
+        this.hasEnded = false;
     }
 
     public Hotspot(@NotNull Player creator, @NotNull Location centerLocation, long aliveTimeMillis, long creationTime, BossBar bossBar) {
@@ -100,7 +100,7 @@ public final class Hotspot {
     }
 
     public void tick() {
-        if (dead) return;
+        if (hasEnded) return;
 
         // Handle BossBar visibility each tick. This works most reliably
         if (Manager.get(NotificationManager.class) != null) {
@@ -122,17 +122,17 @@ public final class Hotspot {
     }
 
     public void end() {
-        if (dead) return;
+        if (hasEnded) return;
+
+        hasEnded = true;
+
+        // Invalidate any cached teleport locations
+        TELEPORT_LOCATION_CACHE.invalidate(this);
 
         // Cleanup BossBar
         for (Audience audience : Bukkit.getOnlinePlayers()) {
             audience.hideBossBar(bossBar);
         }
-
-        // Invalidate any cached teleport locations
-        TELEPORT_LOCATION_CACHE.invalidate(this);
-
-        dead = true;
     }
 
     public @NotNull CompletableFuture<@NotNull Location> getTeleportLocation() {
@@ -256,7 +256,7 @@ public final class Hotspot {
     }
 
     public boolean hasEnded() {
-        return dead;
+        return hasEnded;
     }
 
     public boolean contains(@NotNull Location location) {
@@ -285,8 +285,8 @@ public final class Hotspot {
         this.aliveTimeMillis = aliveTimeMillis;
     }
 
-    public void setDead(boolean dead) {
-        this.dead = dead;
+    public void setHasEnded(boolean hasEnded) {
+        this.hasEnded = hasEnded;
     }
 
     public @NotNull CompletableFuture<Boolean> saveToDatabase() {
