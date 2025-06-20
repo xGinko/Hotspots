@@ -42,7 +42,7 @@ public final class AnnounceHotspotEnd extends Module implements Listener {
         switch (event.getReason()) {
             case EXPIRED -> {
                 for (Player player : plugin.getServer().getOnlinePlayers()) {
-                    notificationManager.getNotificationsEnabled(player.getUniqueId()).thenAccept(enabled -> {
+                    notificationManager.getNotificationsEnabled(player).thenAccept(enabled -> {
                         if (enabled) player.sendMessage(Hotspots.translation(player).hotspot_ended_expired
                                 .replaceText(name));
                     });
@@ -51,7 +51,7 @@ public final class AnnounceHotspotEnd extends Module implements Listener {
 
             case CANCELLED -> {
                 for (Player player : plugin.getServer().getOnlinePlayers()) {
-                    notificationManager.getNotificationsEnabled(player.getUniqueId()).thenAccept(enabled -> {
+                    notificationManager.getNotificationsEnabled(player).thenAccept(enabled -> {
                         if (enabled) player.sendMessage(Hotspots.translation(player).hotspot_ended_cancelled
                                 .replaceText(name));
                     });
@@ -63,7 +63,7 @@ public final class AnnounceHotspotEnd extends Module implements Listener {
                         .replacement(event.getHotspot().getOwnerName()).build();
 
                 for (Player player : plugin.getServer().getOnlinePlayers()) {
-                    notificationManager.getNotificationsEnabled(player.getUniqueId()).thenAccept(enabled -> {
+                    notificationManager.getNotificationsEnabled(player).thenAccept(enabled -> {
                         if (enabled) player.sendMessage(Hotspots.translation(player).hotspot_ended_death
                                 .replaceText(name)
                                 .replaceText(owner));
@@ -78,7 +78,7 @@ public final class AnnounceHotspotEnd extends Module implements Listener {
                         .replacement(event.getHotspot().getOwnerName()).build();
 
                 for (Player player : plugin.getServer().getOnlinePlayers()) {
-                    notificationManager.getNotificationsEnabled(player.getUniqueId()).thenAccept(enabled -> {
+                    notificationManager.getNotificationsEnabled(player).thenAccept(enabled -> {
                         if (enabled) player.sendMessage(Hotspots.translation(player).hotspot_timeout
                                 .replaceText(name)
                                 .replaceText(owner)

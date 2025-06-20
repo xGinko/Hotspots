@@ -105,7 +105,7 @@ public final class Hotspot {
         // Handle BossBar visibility each tick. This works most reliably
         if (Manager.get(NotificationManager.class) != null) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Manager.get(NotificationManager.class).getNotificationsEnabled(player.getUniqueId()).thenAccept(enabled -> {
+                Manager.get(NotificationManager.class).getNotificationsEnabled(player).thenAccept(enabled -> {
                     if (enabled) player.showBossBar(bossBar);
                     else player.hideBossBar(bossBar);
                 });

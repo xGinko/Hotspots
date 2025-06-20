@@ -56,8 +56,8 @@ public final class NotifsSubCmd extends BaseCommand.CooldownCommand {
 
         if (args.length == 1) {
             // Player only entered "/hotspot notifs" so we treat it like a toggle
-            notificationManager.getNotificationsEnabled(player.getUniqueId()).thenAccept(notifsEnabled -> {
-                notificationManager.setNotificationsEnabled(player.getUniqueId(), !notifsEnabled).thenRun(() -> {
+            notificationManager.getNotificationsEnabled(player).thenAccept(notifsEnabled -> {
+                notificationManager.setNotificationsEnabled(player, !notifsEnabled).thenRun(() -> {
                     if (notifsEnabled) player.sendMessage(Hotspots.translation(player).notifs_disabled);
                     else player.sendMessage(Hotspots.translation(player).notifs_enabled);
                 });
@@ -69,11 +69,11 @@ public final class NotifsSubCmd extends BaseCommand.CooldownCommand {
         if (args.length == 2) {
             switch (args[1].toLowerCase()) {
                 case "on", "show", "enable", "enabled" -> {
-                    notificationManager.setNotificationsEnabled(player.getUniqueId(), true)
+                    notificationManager.setNotificationsEnabled(player, true)
                             .thenRun(() -> player.sendMessage(Hotspots.translation(player).notifs_enabled));
                 }
                 case "off", "hide", "disable", "disabled" -> {
-                    notificationManager.setNotificationsEnabled(player.getUniqueId(), false)
+                    notificationManager.setNotificationsEnabled(player, false)
                             .thenRun(() -> player.sendMessage(Hotspots.translation(player).notifs_disabled));
                 }
             }

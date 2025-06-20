@@ -1,7 +1,7 @@
 package me.xginko.hotspots.managers;
 
 import me.xginko.hotspots.Hotspots;
-import net.kyori.adventure.audience.Audience;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -34,38 +34,32 @@ public final class NotificationManager extends Manager implements Listener {
         notification_settings.clear();
     }
 
-    public @NotNull CompletableFuture<Boolean> getNotificationsEnabled(@NotNull UUID uuid) {
-        if (notification_settings.containsKey(uuid)) {
-            return CompletableFuture.completedFuture(notification_settings.get(uuid));
+    public @NotNull CompletableFuture<Boolean> getNotificationsEnabled(@NotNull Player player) {
+        if (notification_settings.containsKey(player.getUniqueId())) {
+            return CompletableFuture.completedFuture(notification_settings.get(player.getUniqueId()));
         }
 
         return Hotspots.database()
-                .getNotificationsEnabled(uuid)
+                .getNotificationsEnabled(player.getUniqueId())
                 .thenApply(notificationsEnabledStatus -> {
-                    notification_settings.put(uuid, notificationsEnabledStatus); // Cache on request
+                    notification_settings.put(player.getUniqueId(), notificationsEnabledStatus); // Cache on request
                     return notificationsEnabledStatus; // Return database result
                 });
     }
 
-    public @NotNull CompletableFuture<Boolean> setNotificationsEnabled(@NotNull UUID uuid, boolean enable) {
-        notification_settings.put(uuid, enable);
+    public @NotNull CompletableFuture<Boolean> setNotificationsEnabled(@NotNull Player player, boolean enable) {
+        notification_settings.put(player.getUniqueId(), enable);
 
         // Hide/Show Hotspot BossBars for desired target audience
-        plugin.getServer().getGlobalRegionScheduler().execute(plugin, () -> {
-            // global region scheduler to avoid async getEntity call
-            Audience entity = plugin.getServer().getEntity(uuid);
-            if (entity == null) return;
-            HotspotManager hotspotManager = Manager.get(HotspotManager.class);
-            if (hotspotManager == null) return;
-
+        if (Manager.get(HotspotManager.class) != null) {
             if (enable) {
-                hotspotManager.hideHotspotsFor(entity);
+                Manager.get(HotspotManager.class).hideHotspotsFor(player);
             } else {
-                hotspotManager.showHotspotsFor(entity);
+                Manager.get(HotspotManager.class).showHotspotsFor(player);
             }
-        });
+        }
 
-        return Hotspots.database().setNotificationsEnabled(uuid, enable);
+        return Hotspots.database().setNotificationsEnabled(player.getUniqueId(), enable);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

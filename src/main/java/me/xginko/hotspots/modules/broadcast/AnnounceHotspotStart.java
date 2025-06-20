@@ -37,7 +37,7 @@ public final class AnnounceHotspotStart extends Module implements Listener {
         NotificationManager notificationManager = Manager.get(NotificationManager.class);
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            notificationManager.getNotificationsEnabled(player.getUniqueId()).thenAccept(enabled -> {
+            notificationManager.getNotificationsEnabled(player).thenAccept(enabled -> {
                 if (enabled) player.sendMessage(Hotspots.translation(player.locale()).hotspot_started.replaceText(name));
             });
         }
