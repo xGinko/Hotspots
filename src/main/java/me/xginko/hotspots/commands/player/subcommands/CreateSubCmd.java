@@ -10,6 +10,7 @@ import me.xginko.hotspots.managers.HotspotManager;
 import me.xginko.hotspots.managers.Manager;
 import me.xginko.hotspots.utils.AdventureUtil;
 import me.xginko.hotspots.utils.BossBarUtil;
+import me.xginko.hotspots.utils.Util;
 import me.xginko.hotspots.utils.permissions.HotspotsPermission;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -97,8 +98,8 @@ public final class CreateSubCmd extends CooldownCommand {
                     color = BossBar.Color.valueOf(args[1]);
                     if (!Hotspots.config().bossbar_colors.contains(color)) throw new IllegalArgumentException();
                 } else {
-                    // Always use the first entry from the config for players without permission
-                    color = Hotspots.config().bossbar_colors.get(0);
+                    // Pick random bossbar color from config if no permission to choose
+                    color = Util.getRandomElement(Hotspots.config().bossbar_colors);
                 }
             } catch (IllegalArgumentException e) {
                 player.sendMessage(Hotspots.translation(player).create_failed_color
