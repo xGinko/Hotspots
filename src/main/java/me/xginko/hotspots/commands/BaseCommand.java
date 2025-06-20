@@ -71,34 +71,29 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         }
 
         public long getMillisSinceCommandLastUsed(UUID uuid) {
-            return hasUsedCommandBefore(uuid) ? System.currentTimeMillis() - lastUseTime.get().get(uuid) : -1L;
-        }
-
-        public void setCommandLastUsed(UUID uuid, long time) {
-            lastUseTime.get().put(uuid, time);
+            return System.currentTimeMillis() - lastUseTime.get().getOrDefault(uuid, -1L);
         }
 
         public void putOnCommandCooldown(UUID uuid) {
-            setCommandLastUsed(uuid, System.currentTimeMillis());
+            lastUseTime.get().put(uuid, System.currentTimeMillis());
         }
 
         public boolean isOnCommandCooldown(Player player) {
-            if (bypassPermission.check(player).toBoolean()) {
-                return false;
-            }
-
-            if (!hasUsedCommandBefore(player.getUniqueId())) {
-                return false;
-            }
-
-            return getMillisSinceCommandLastUsed(player.getUniqueId()) < cooldownMilliseconds;
+            return      !bypassPermission.check(player).toBoolean()
+                    &&  hasUsedCommandBefore(player.getUniqueId())
+                    &&  getMillisSinceCommandLastUsed(player.getUniqueId()) < cooldownMilliseconds;
         }
 
         public void sendCommandCooldownMessage(Player player) {
-            player.sendMessage(Hotspots.translation(player).cmd_cooldown.replaceText(TextReplacementConfig.builder()
-                    .matchLiteral("%time%")
-                    .replacement(Util.formatDuration(Duration.ofMillis(Math.max(0L, cooldownMilliseconds - getMillisSinceCommandLastUsed(player.getUniqueId())))))
-                    .build()));
+            player.sendMessage(Hotspots.translation(player).cmd_cooldown
+                    .replaceText(
+                            TextReplacementConfig.builder()
+                                    .matchLiteral("%time%")
+                                    .replacement(Util.formatDuration(Duration.ofMillis(Math.max(0L,
+                                            cooldownMilliseconds - getMillisSinceCommandLastUsed(player.getUniqueId())
+                                    ))))
+                                    .build()
+                    ));
         }
     }
 }
