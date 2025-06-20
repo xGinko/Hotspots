@@ -98,7 +98,7 @@ public final class HotspotsConfig {
                 Time in seconds a player needs to wait before they can
                 use the /hotspot end command again.""")));
 
-        this.teleport_radius = Math.max(1, getInt("teleport.location.horizontal-radius", 8, """
+        this.teleport_radius = Math.max(1, getInt("teleport.location.horizontal-radius", 32, """
                 Radius in blocks in XZ-direction around the center location of the
                 hotspot that will be used for random teleportation."""));
         this.teleport_radius_sqared = MathHelper.square(teleport_radius);

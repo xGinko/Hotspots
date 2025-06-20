@@ -37,21 +37,21 @@ public final class HotspotParticleSphere extends Module implements Listener {
                 Uses teleport radius for visual radius.""");
         this.particle_update_ticks = config.getInt(configPath + ".update-ticks", 1, """
                 Update time in ticks.""");
-        this.particle_spawns = config.getInt(configPath + ".particle-spawns", 300, """
+        this.particle_spawns = config.getInt(configPath + ".particle-spawns", 50, """
                 The amount of spawns around the sphere shape each time the task ticks.\s
                 Affects effect density.""");
-        this.particle_count = config.getInt(configPath + ".particle-count", 3, """
+        this.particle_count = config.getInt(configPath + ".particle-count", 1, """
                 The amount of particles that will be spawned at once each time the task ticks.\s
                 Affects effect density.""");
         String particle_docs = "https://jd.papermc.io/paper/1.21/org/bukkit/Particle.html";
-        final String configured_particle = config.getString(configPath + ".particle-type", Particle.WITCH.name(), """
+        final String configured_particle = config.getString(configPath + ".particle-type", Particle.SONIC_BOOM.name(), """
                 What particle type to use.""");
         Particle particle;
         try {
             particle = Particle.valueOf(configured_particle);
         } catch (IllegalArgumentException e) {
             warn("Particle '" + configured_particle + "' not recognized. Please use valid enums from: " + particle_docs);
-            particle = Particle.WITCH;
+            particle = Particle.SONIC_BOOM;
         }
         this.particle_type = particle;
     }
